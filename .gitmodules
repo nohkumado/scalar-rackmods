@@ -1,0 +1,3 @@
+[submodule "controler_gehaeuse/PiHoles"]
+	path = controler_gehaeuse/PiHoles
+	url = https://github.com/daprice/PiHoles.git
