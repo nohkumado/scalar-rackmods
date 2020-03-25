@@ -1,4 +1,4 @@
-chainlink(length = 60,width = 30, height= 30 , wall=3);
+
 //translate([50,0,0]) runden(width = 30, height= 30);
 module chainlink(length = 25,width= 16.6, height=20, wall= 2, angle = 45,tol=.2)
 {
@@ -26,10 +26,10 @@ module chainlink(length = 25,width= 16.6, height=20, wall= 2, angle = 45,tol=.2)
       {
         union()
         {
-          translate([-length/4,0,-height/2-1])
-            cylinder(d=height+tol/2,h=wall+tol);
-          translate([-length/4,0,height/2-wall])
-            cylinder(d=height+tol/2,h=wall+tol);
+          translate([-length/4,0,-height/2-tol])
+            cylinder(d=height+tol/2,h=wall+2*tol);
+          translate([-length/4,0,height/2-wall-tol])
+            cylinder(d=height+tol/2,h=wall+2*tol);
         }
         translate([-length/4,0,-height/2-1])
           cylinder(d=height/4-2*tol,h=width+4);
@@ -54,3 +54,6 @@ module runden(height=20,width= 16.6)
       cylinder(d=height,h=width+8);
   }
 }//module runden(height=20,width= 16.6)
+
+//sum up recursively the values of a vector from index i to index s
+function sumvec(v,i,s=0) = (i==s ? v[i] : v[i] + sumv(v,i-1,s));
