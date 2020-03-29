@@ -8,8 +8,28 @@
    metrische_mutter_schablone(5,startw = 30, toleranz = 0.1); //creates a M5 nut, rotated by 30deg and with an added .1 width
 
  */
+use<threads.scad>;
 //  metrische_mutter_schablone(5,startw = 30, toleranz = 0.1); //creates a M5 nut, rotated by 30deg and with an added .1 width
 //translate ([12,00,0])metrische_schraube_schablone(typ = DIN7991, mass= 5,laenge = 30, toleranz = 0.1);
+
+
+
+// metrische_mutter(5,startw = 30); //creates a M5 nut, rotated by 30deg and with an added .1 width
+// translate ([0,12,0]) metrische_schraube(DIN912, 5,laenge = 19);
+// translate ([12,0,0])metrische_mutter(6,startw = 30); //creates a M5 nut, rotated by 30deg and with an added .1 width
+// translate ([12,12,0])metrische_schraube(DIN912, 6,laenge = 19);
+// translate ([28,12,0]) metrische_t_mutter(4,startw = 30);
+// translate ([28,0,0]) metrische_t_mutter(6,startw = 30);
+// translate ([42,0,0]) rotate([0,0,90])metrische_t_mutter(8,startw = 30);
+for(y= [1 : 1]) 
+{
+for(x= [1 : 1]) 
+{
+ translate ([x*18,y*24,0]) metrische_schraube(DIN912, 6,laenge = 19);
+ translate ([x*18,y*24+12,0]) metrische_t_mutter(6,startw = 30);
+}
+}
+
 
 DIN7991 = 0;
 ISO10642 = 1;
@@ -70,7 +90,39 @@ masse = [
   [110 ,  88 , 155], //M110 
   [120 ,  95 , 175], //M120 
   ];
+muttern = 
+[
+//Hammerkopfmuttern
+//M versatz d mutter b      tiefe
+  [
+[4,1  ,6  ,4,11.6,5.9],
+//[6,1.5,8  ,6,16.5,7.9],//official
+[6,1.5,8  ,6,16.0,7.9],//mine
+[8,3  ,8.7,10,19.4,8.1]
+  ]
+];
 
+/*
+
+a -0,3/-0,5	d	e	h	k	für T-Nuten DIN 650
+5	M 4	-	-	9 -0,5	6,5	3 -0,3	5
+6	M 5	-	-	10 -0,5	8	4 -0,5	6
+8	M 6	-	-	13 -0,5	10	6 -0,5	8
+10	M 6	M 8	-	15 -0,5	12	6 -0,5	10
+12	M 8	M 10	-	18 -0,5	14	7 -0,5	12
+14	M 10	M 12	-	22 -0,5	16	8 -0,5	14
+16	M 10	M 12	M 14	25 -0,5	18	9 -0,5	16
+18	M 12	M 14	M 16	28 -0,5	20	10 -0,5	18
+20	M 12	M 16	M 18	32 -0,5	24	12 -0,5	20
+22	M 16	M 20	-	35 -0,5	28	14 -0,5	22
+24	M 20	M 22	-	40 -0,5	32	16 -0,5	24
+28	M 20	M 24	-	44 -1	36	18 -1	28
+36*	M 30	-	-	54 -1	44	22 -1	36
+42*	M 36	-	-	65 -1	52	26 -1	42
+
+
+
+*/
 
 
 schrauben = 
@@ -189,6 +241,58 @@ module metrische_mutter_schablone(mass,startw = 30, toleranz = 0, ueberlaenge = 
     linear_extrude(height = data[1]+2*toleranz) polygon(sechseck);
   }
 }
+module metrische_mutter(mass,startw = 30,  ueberlaenge = false)
+{
+  difference()
+  {
+    metrische_mutter_schablone(mass,startw, 0, ueberlaenge);
+    translate([0,0,-1]) scale([1.1,1.1,1])metric_thread (diameter=mass, pitch=1, length=mass+2, internal=true, leadin=2);
+  }
+
+}//module metrische_mutter(mass,startw = 30, toleranz = 0, ueberlaenge = false)
+module metrische_t_mutter(mass,startw = 30)
+{
+  data = muttern[0][search(mass, muttern[0], num_returns_per_match=0, index_col_num=0)[0]];
+  echo("Hammermutter: ",data);
+  // M versatz d   mutter b      breite
+  //[6, 1.5,   8,   6,    16.5,  7.9],
+  // 0  1     2     3     4      5
+  p = [
+    [data[2]/2,0],
+    [data[2]/2,data[1]],
+    [data[4]/2,data[1]],
+    [data[4]/2,2*data[3]/3],
+    [5.5,data[3]],
+    [-5.5,data[3]],
+    [-data[4]/2,2*data[3]/3],
+    [-data[4]/2,data[1]],
+    [-data[2]/2,data[1]],
+    [-data[2]/2,0],
+  ];
+      translate([0,0,data[3]])
+        rotate([180,0,0])
+    difference()
+    {
+      translate([0,data[5]/2,0])
+        rotate([90,0,0])
+        linear_extrude(height=data[5])
+        polygon(p);
+      union()
+      {
+        translate([0,0,-1]) metric_thread (diameter=mass, pitch=1, length=data[3]+2, internal=true);
+        translate([data[4]/2,data[5]/2+data[3]/4,data[3]/2])
+          rotate([0,0,-30])
+          color("blue")
+          cube([data[4],data[3],data[3]], center=true);
+
+        translate([-data[4]/2,-data[5]/2-data[3]/4,data[3]/2])
+          rotate([0,0,-30])
+          color("blue")
+          cube([data[4],data[3],data[3]], center=true);
+      }
+    }
+
+}//module metrische_mutter(mass,startw = 30, toleranz = 0, ueberlaenge = false)
   // M  ∅ Senkloch,∅ Durchgang, min. Senk-Tiefe
 function defined(a) = str(a) != "undef"; 
 function  mschraubmass(typ,mass)= schrauben[typ][search(mass, schrauben[typ], num_returns_per_match=0, index_col_num=0)[0]];
@@ -209,4 +313,16 @@ module metrische_schraube_schablone(typ, mass,laenge = 30, toleranz = 0)
   }
 
   translate([0,0,data[3]]) cylinder(d=data[0]+toleranz, h= laenge);
+}
+module metrische_schraube(typ, mass,laenge = 30)
+{
+  difference()
+  {
+    metrische_schraube_schablone(typ, mass,laenge = 0,  0);
+    color("red")
+      translate([0,0,-0.1])
+      metrische_mutter_schablone(mass-3,startw = 30, ueberlaenge=true); //creates a M5 nut, rotated by 30deg and with an added .1 width
+  }
+  data = schrauben[typ][search(mass, schrauben[typ], num_returns_per_match=0, index_col_num=0)[0]];
+  translate([0,0,data[3]]) scale([0.95,0.95,1])translate([0,0,-1]) metric_thread (diameter=mass, pitch=1, length=laenge, internal=false, leadin=1);
 }

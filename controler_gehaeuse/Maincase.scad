@@ -73,7 +73,8 @@ module deckel()
   //linear_extrude(height=5)
 translate([0,0,200])
 scale([200,200,200])
-  import(file="~/AndroidStudioProjects/Logo_Nohkumado_v2.svg", center=true, dpi=96);
+  import(file="Logo_Nohkumado_v2.svg", center=true);
+  //v >05... import(file="Logo_Nohkumado_v2.svg", center=true, dpi=96);
   translate([40,+45,-1*wall]) ventilator(false);
   difference()
   {
