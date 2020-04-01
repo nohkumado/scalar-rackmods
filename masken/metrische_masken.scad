@@ -247,7 +247,7 @@ module metrische_mutter(mass,startw = 30,  ueberlaenge = false)
   difference()
   {
     metrische_mutter_schablone(mass,startw, 0, ueberlaenge);
-    translate([0,0,-1]) scale([1.1,1.1,1])metric_thread (diameter=mass, pitch=1, length=mass+2, internal=true, leadin=2);
+    translate([0,0,-1]) scale([1.08,1.08,1])metric_thread (diameter=mass, pitch=1, length=mass+2, internal=true, leadin=2);
   }
 
 }//module metrische_mutter(mass,startw = 30, toleranz = 0, ueberlaenge = false)
@@ -301,7 +301,7 @@ module metrische_t_mutter(mass,startw = 30)
             sphere(d=1.0,$fn=100);
           }
 }
-        translate([0,0,-1]) scale([1.1,1.1,1])metric_thread (diameter=mass, pitch=1, length=data[3]+2, internal=true, leadin=2);
+        translate([0,0,-1]) scale([1.08,1.08,1])metric_thread (diameter=mass, pitch=1, length=data[3]+2, internal=true, leadin=2);
       }
 
 }// module metrische_t_mutter(mass,startw = 30)
@@ -336,5 +336,5 @@ module metrische_schraube(typ, mass,laenge = 30)
       metrische_mutter_schablone(mass-3,startw = 30, ueberlaenge=true); //creates a M5 nut, rotated by 30deg and with an added .1 width
   }
   data = schrauben[typ][search(mass, schrauben[typ], num_returns_per_match=0, index_col_num=0)[0]];
-  translate([0,0,data[3]]) scale([0.95,0.95,1])translate([0,0,-1]) metric_thread (diameter=mass, pitch=1, length=laenge, internal=false, leadin=1);
+  translate([0,0,data[3]]) scale([1,1,1])translate([0,0,-1]) metric_thread (diameter=mass, pitch=1, length=laenge, internal=false, leadin=1);
 }
