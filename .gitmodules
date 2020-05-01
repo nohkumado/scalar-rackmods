@@ -4,3 +4,6 @@
 [submodule "spulenhalter"]
 	path = spulenhalter
 	url = git@github.com:nohkumado/spulenhalter.git
+[submodule "scalar_xlp_titan_extruder_holder"]
+	path = scalar_xlp_titan_extruder_holder
+	url = git@github.com:nohkumado/scalar_xlp_titan_extruder_holder.git
