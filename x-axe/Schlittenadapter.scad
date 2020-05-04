@@ -1,4 +1,5 @@
 use <Schlittenplatte.scad>;
+use <E3DV6.scad>;
 schienen = [
 [14,8,-0.1],
 [59.6,8,-0.1]
@@ -9,30 +10,8 @@ schienen = [
     SchlittenAdapter(5);
 //WerkzeugHalter();
 //WerkzeugAdapter();
-//translate([37,6,-10])  rotate([0,0,180])rotate([90,180,0])Kuehlermodell();
+translate([37,6,-10])  rotate([0,0,180])rotate([90,180,0])E3DV6();
 
-module Kuehlermodell(vulcan=false)
-{
-color("green")
-  cylinder(d=22.2, h=26.5);
-  cylinder(d=16, h=33.9);
-  cylinder(d=12, h=43);
-  translate([0,0,39])cylinder(d=16, h=4);
-  translate([0,-4.6,-6])cube([16.25,23.8,12], center = true);
-  translate([0,0,-18])cylinder(d2=8, d1=0.1, h=6);
-if(vulcan)
-{
-/*
-Gesamth 65.5
-mit Spitze 71
-Breite H 12
-Breite H 20
-Hoehr H 20
-Hoehe Heizkoepf Kuehler bis ausgang spitze 22.2
-
-*/
-}//
-}//module Kuehlermodell()
 module WerkzeugAdapter()
 {
 color("blue")

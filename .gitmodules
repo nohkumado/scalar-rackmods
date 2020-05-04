@@ -7,3 +7,6 @@
 [submodule "scalar_xlp_titan_extruder_holder"]
 	path = scalar_xlp_titan_extruder_holder
 	url = git@github.com:nohkumado/scalar_xlp_titan_extruder_holder.git
+[submodule "openscad-model-library"]
+	path = openscad-model-library
+	url = git@github.com:cznewt/openscad-model-library.git
