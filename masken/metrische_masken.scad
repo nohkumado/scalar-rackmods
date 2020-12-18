@@ -308,7 +308,10 @@ module metrische_t_mutter(mass,startw = 30)
 // M  ∅ Senkloch,∅ Durchgang, min. Senk-Tiefe
 function defined(a) = str(a) != "undef"; 
 function  mschraubmass(typ,mass)= schrauben[typ][search(mass, schrauben[typ], num_returns_per_match=0, index_col_num=0)[0]];
-module metrische_schraube_schablone(typ, mass,laenge = 30, toleranz = 0)
+module metrische_schraube_schablone(typ, mass,laenge = 30, toleranz = 0, ueberlaenge = false, center = false)
+{
+offset = (center)?laenge/2:0;
+translate([0,0,-offset])
 {
   $fn = 100;
   data = schrauben[typ][search(mass, schrauben[typ], num_returns_per_match=0, index_col_num=0)[0]];
@@ -317,14 +320,17 @@ module metrische_schraube_schablone(typ, mass,laenge = 30, toleranz = 0)
   }
   if(typ == DIN933)
   {
-    metrische_mutter_schablone(mass=data[0], startw = 30, toleranz = toleranz, ueberlaenge = false);
+    metrische_mutter_schablone(mass=data[0], startw = 30, toleranz = toleranz, ueberlaenge = ueberlaenge);
   }
   else
   {
     cylinder(d1=data[1]+toleranz, d2=data[2]+toleranz, h= 2*data[3]);
+    if(ueberlaenge)
+  translate([0,0,-laenge]) cylinder(d2=data[1]+toleranz, d1=1.5*(data[1]+toleranz), h= laenge);
   }
 
   translate([0,0,data[3]]) cylinder(d=data[0]+toleranz, h= laenge);
+}
 }
 module metrische_schraube(typ, mass,laenge = 30)
 {
